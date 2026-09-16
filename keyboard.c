@@ -1,26 +1,31 @@
 #include "keyboard.h"
 
 void initKeyboard() {
-  // Настройка строк (R1-R4) как выходы с открытым стоком
-  // PB7, PB6, PB3, PA10
-  GPIOB->MODER = (GPIOB->MODER & ~(3U << (7 * 2))) | (1U << (7 * 2));
-  GPIOB->MODER = (GPIOB->MODER & ~(3U << (6 * 2))) | (1U << (6 * 2));
-  GPIOB->MODER = (GPIOB->MODER & ~(3U << (3 * 2))) | (1U << (3 * 2));
-  GPIOA->MODER = (GPIOA->MODER & ~(3U << (10 * 2))) | (1U << (10 * 2));
+    GPIOB->MODER = (GPIOB->MODER & ~(3U << (7 * 2))) | (1U << (7 * 2));
+    GPIOB->MODER = (GPIOB->MODER & ~(3U << (6 * 2))) | (1U << (6 * 2));
+    GPIOB->MODER = (GPIOB->MODER & ~(3U << (3 * 2))) | (1U << (3 * 2));
+    GPIOA->MODER = (GPIOA->MODER & ~(3U << (10 * 2))) | (1U << (10 * 2));
 
-  GPIOB->OTYPER |= (1 << 7) | (1 << 6) | (1 << 3);
-  GPIOA->OTYPER |= (1 << 10);
+    GPIOB->OTYPER |= (1U << 7) | (1U << 6) | (1U << 3);
+    GPIOA->OTYPER |= (1U << 10);
 
-  // Настройка столбцов (C1-C3) как входы с подтяжкой к питанию
-  // PB10, PB4, PB5
-  GPIOB->MODER &= ~(3U << (10 * 2) | 3U << (4 * 2) | 3U << (5 * 2));
-  GPIOB->PUPDR = (GPIOB->PUPDR & ~(3U << (10 * 2))) | (1U << (10 * 2));
-  GPIOB->PUPDR = (GPIOB->PUPDR & ~(3U << (4 * 2))) | (1U << (4 * 2));
-  GPIOB->PUPDR = (GPIOB->PUPDR & ~(3U << (5 * 2))) | (1U << (5 * 2));
-  GPIOB->PUPDR = (GPIOB->PUPDR & ~(3U << (15 * 2))) | (1U << (15 * 2));
+    GPIOB->BSRR = (1U << 7) | (1U << 6) | (1U << 3);
+    GPIOA->BSRR = (1U << 10);
 
-  lastKey = '\0';
-  lastScanTime = 0;
+    GPIOB->MODER &= ~(
+        (3U << (10 * 2)) |
+        (3U << (4 * 2)) |
+        (3U << (5 * 2)) |
+        (3U << (15 * 2))
+    );
+
+    GPIOB->PUPDR = (GPIOB->PUPDR & ~(3U << (10 * 2))) | (1U << (10 * 2));
+    GPIOB->PUPDR = (GPIOB->PUPDR & ~(3U << (4 * 2))) | (1U << (4 * 2));
+    GPIOB->PUPDR = (GPIOB->PUPDR & ~(3U << (5 * 2))) | (1U << (5 * 2));
+    GPIOB->PUPDR = (GPIOB->PUPDR & ~(3U << (15 * 2))) | (1U << (15 * 2));
+
+    lastKey = '\0';
+    lastScanTime = 0;
 }
 
 char readKey() {
